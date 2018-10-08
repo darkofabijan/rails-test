@@ -18,8 +18,8 @@ blocks:
           - echo 'source ~/.toolbox/toolbox' >> ~/.bash_profile
           - checkout
           - cache restore --key v1-gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),v1-gems-$SEMAPHORE_GIT_BRANCH-,v1-gems-master-
-          - bundle install
-          - cache store --key v1-gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock)
+          - bundle install --path vendor/bundle
+          - cache store --key v1-gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) --path vendor/bundle
 
   - name: "Restore gems"
     task:
