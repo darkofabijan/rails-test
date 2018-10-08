@@ -1,0 +1,35 @@
+version: v1.0
+name: First pipeline example
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: "Install gems"
+    task:
+      jobs:
+      - name: Docker build
+        commands:
+          - rm -rf ~/.toolbox || true
+          - git clone -b ms/cache-fallback-key --single-branch https://github.com/semaphoreci/toolbox.git ~/.toolbox
+          - bash ~/.toolbox/install-toolbox
+          - source ~/.toolbox/toolbox
+          - echo 'source ~/.toolbox/toolbox' >> ~/.bash_profile
+          - checkout
+          - cache restore --key v1-gems-$SEMAPHORE_GIT_BRANCH-#(checksum Gemfile.lock),v1-gems-$SEMAPHORE_GIT_BRANCH-,v1-gems-master-
+          - bundle install
+          - cache store --key v1-gems-$SEMAPHORE_GIT_BRANCH-#(checksum Gemfile.lock)
+
+  - name: "Restore gems"
+    task:
+      jobs:
+      - name: Smoke
+        commands:
+          - rm -rf ~/.toolbox || true
+          - git clone -b ms/cache-fallback-key --single-branch https://github.com/semaphoreci/toolbox.git ~/.toolbox
+          - bash ~/.toolbox/install-toolbox
+          - source ~/.toolbox/toolbox
+          - echo 'source ~/.toolbox/toolbox' >> ~/.bash_profile
+          - checkout
+          - cache restore --key v1-gems-$SEMAPHORE_GIT_BRANCH-#(checksum Gemfile.lock),v1-gems-$SEMAPHORE_GIT_BRANCH-,v1-gems-master-
