@@ -18,6 +18,7 @@ blocks:
           - echo 'source ~/.toolbox/toolbox' >> ~/.bash_profile
           - checkout
           - cache restore --key v1-gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),v1-gems-$SEMAPHORE_GIT_BRANCH-,v1-gems-master-
+          - sudo apt-get update && sudo apt-get install -y libpq-dev
           - bundle install --path vendor/bundle
           - cache store --key v1-gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) --path vendor/bundle
 
@@ -33,3 +34,5 @@ blocks:
           - echo 'source ~/.toolbox/toolbox' >> ~/.bash_profile
           - checkout
           - cache restore --key v1-gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),v1-gems-$SEMAPHORE_GIT_BRANCH-,v1-gems-master-
+          - sudo apt-get update && sudo apt-get install -y libpq-dev
+          - bundle install --path vendor/bundle
